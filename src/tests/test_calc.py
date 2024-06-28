@@ -50,8 +50,8 @@ def test_calculation(expression, expected_result):
         # Locate and click the AC (clear) button to reset the calculator
         ac_button = driver.find_element(By.CSS_SELECTOR, ".btn.clr")
         ac_button.click()
-        # Close the WebDriver session
         driver.quit()
+        
 
 # Run the test cases
 test_calculation("3+5", "8")
