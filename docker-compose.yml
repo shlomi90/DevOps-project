@@ -1,0 +1,7 @@
+version: "3.3"
+services:
+  web:
+    container_name: basic_calc
+    image : omrialster/basic_calc:latest
+    ports :
+      - "80:3000"
