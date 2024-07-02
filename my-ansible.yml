@@ -49,7 +49,7 @@
       line: 'subnet_id: {{ subnet.subnet.id }}'
       state: present
       create: True
-
+  
   - name: create IGW
     amazon.aws.ec2_vpc_igw:
      vpc_id: "{{ vpc.vpc.id }}"
@@ -82,6 +82,7 @@
       tags:
         Name: "{{ vpc_name }}_public_rt"
 
+
   - name: Create security group
     ec2_group:
       name: "{{ vpc_name }} VPC SG"
@@ -97,9 +98,10 @@
           cidr_ip: 0.0.0.0/0
     register: sg
 
+
   - name: Create server
     amazon.aws.ec2_instance:
-      image_id: "{{ aws_centos_ami }}"
+      image_id: "{{ aws_ubunto_ami }}"
       wait: yes
       instance_type: "{{ Server_type }}"
       region: "{{ aws_region }}"
@@ -121,6 +123,7 @@
         assign_public_ip: yes
       state: running
     register: server_ec2
+
 
   - name: get ip of instance
     amazon.aws.ec2_instance_info:
@@ -150,7 +153,7 @@
       port: 22
       timeout: 300
 
-# ##############################################################
+  # ##############################################################
 - name: Setup web server
   hosts: app
   user: ubuntu
