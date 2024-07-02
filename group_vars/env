@@ -2,9 +2,9 @@ server_name: devops-server
 env: production
 
 vpc_name: ansible-vpc
-network: 10.10.0.0/16
-subnet_cidr: 10.10.0.0/24
-env_name: 
+network: 10.1.0.0/16
+subnet_cidr: 10.1.0.0/24
+env_name: colman
 aws_region: eu-central-1
 subnet: eu-central-1a
 
