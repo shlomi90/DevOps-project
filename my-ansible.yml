@@ -47,7 +47,7 @@
     ansible.builtin.lineinfile:
       path: group_vars/colman.env
       regexp: 'subnet_id: ' 
-      line: 'subnet_id: {{ subnet.results[0].subnet.id }}'
+      line: 'subnet_id: {{ subnet.subnet.id }}'
       state: present
       create: True
   
@@ -76,7 +76,7 @@
       region: "{{ aws_region }}"
       state: present
       subnets:
-        - "{{ subnet.result[0].subnet.id }}"
+        - "{{ subnet.subnet.id }}"
       routes:
         - dest: 0.0.0.0/0
           gateway_id: "{{ igw.gateway_id  }}"
@@ -119,7 +119,7 @@
         Environment: "{{ env }}"
       exact_count: 1
       wait_timeout: 300
-      vpc_subnet_id: "{{ subnet.results[0].subnet.id }}"
+      vpc_subnet_id: "{{ subnet.subnet.id }}"
       security_group: "{{ sg.group_id }}"
       network:
         assign_public_ip: yes
@@ -129,6 +129,7 @@
 
   - name: get ip of instance
     amazon.aws.ec2_instance_info:
+      region: "{{ aws_region }}"
       filters:
         "tag:Name": "{{ server_name }}"
         instance-state-name: [ "running"]
@@ -137,7 +138,7 @@
   - debug: var=ec2_data.instances[0].public_ip_address
 
   - name: Add server public IP to application host group
-    add_host: hostname={{ ec2_data.instances[0].public_ip_address }} 
+    add_host: hostname={{ ec2_data.instances[0].public_ip_address }} groups=app
     # groups=app
 
   - name: Add Public IP definition to vars file
@@ -168,7 +169,7 @@
     - group_vars/env
   tasks:
     - name: add GPG key_name
-      ansisible.builtin.shell: wget -q0 - https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+      ansible.builtin.shell: wget -q0- https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
 
     - name: add docker repository
@@ -189,7 +190,7 @@
         update_cache: true
 
 
-    -name : restart Docker service
+    - name : restart Docker service
       service:
         name: docker
         state: restarted
@@ -197,8 +198,8 @@
 
     - name : Copy file with owner and permission
       copy:
-        src: ~/ssh/keypair
-        dest: ~/ssh/keypair
+        src: ~/ssh/keypair.pub
+        dest: ~/ssh/keypair.pub
         mode: 0600
 
 
@@ -207,7 +208,7 @@
         repo: git@github.com:chenamrani/DevOps-project.git 
         # dest: opt/app
         version: main
-        key_file: ~/ssh/keypair
+        key_file: ~/ssh/keypair.pub 
         accept_hostkey: yes
         force: yes
 
@@ -232,10 +233,10 @@
       register: ip address
         
 
-    - debug:
-      msg:
-        - "Dont forget to change the Host name in GitHub to {{ ip_address.stdout }}"
-        - "your app is ready to use at http://{{ ip_address.stdout }}"
+    # - debug:
+    #   msg:
+    #     - "Dont forget to change the Host name in GitHub to {{ ip_address.stdout }}"
+    #     - "your app is ready to use at http://{{ ip_address.stdout }}"
 
 
     # - name: install base packages
