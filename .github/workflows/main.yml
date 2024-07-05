@@ -20,3 +20,22 @@ jobs:
 
       - name: push to DockerHub
         run: docker push ${{ secrets.DOCKER_USER }}/basic_calc:latest
+
+  deploy:
+    needs: docker_build
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy app
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script_stop: true
+          script: |
+            sudo docker stop calc
+            sudo docker rm calc
+            sudo docker rmi devopscourseocos/basic_calc
+            sudo docker pull devopscourseocos/basic_calc
+            sudo docker run --name calc -d -p 80:3000 devopscourseocos/basic_calc
