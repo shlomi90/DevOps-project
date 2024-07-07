@@ -167,10 +167,15 @@
   gather_facts: False
   vars_files:
     - group_vars/env
+    - group_vars/docker.env
   tasks:
     - name: add GPG key_name
-      ansible.builtin.shell: wget -q0- https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
+      ansible.builtin.shell: wget -qO - https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+      become: true
+      become_user: root
+      vars:
+        ansible_ssh_private_key_file: /root/ssh/keypair
+        ansible_ssh_common_args: '-o IdentitiesOnly=yes'
 
     - name: add docker repository
       apt_repository:
@@ -184,7 +189,7 @@
           - docker-ce
           - docker-ce-cli
           - containerd.io
-          - docker-builx-plugin
+          - docker-buildx-plugin
           - docker-compose-plugin
         state: present
         update_cache: true
@@ -199,16 +204,33 @@
     - name : Copy file with owner and permission
       copy:
         src: ~/ssh/keypair.pub
-        dest: ~/ssh/keypair.pub
+        dest: ~/.ssh/keypair.pub
         mode: 0600
+
+
+    - name: Ensure .ssh directory exists
+      file:
+        path: /home/ubuntu/.ssh
+        state: directory
+        mode: '0700'
+      become: yes
+      become_user: ubuntu
+
+    - name: Copy SSH private key
+      copy:
+        src: ~/ssh/keypair
+        dest: /home/ubuntu/.ssh/github_key
+        mode: '0600'
+      become: yes
+      become_user: ubuntu    
 
 
     - name : Clone my app repo
       git:
-        repo: git@github.com:chenamrani/DevOps-project.git 
-        # dest: opt/app
+        repo: git@github.com:shlomi90/DevOps-project.git
+        dest: opt/app
         version: main
-        key_file: ~/ssh/keypair.pub 
+        key_file: /home/ubuntu/.ssh/github_key
         accept_hostkey: yes
         force: yes
 
@@ -216,21 +238,22 @@
     - name : build docker image and push to DockerHab
       shell: "{{ item }}"
       args:
-        chdir: /opt/app
+        chdir: opt/app
       with_items:
         - docker login -u {{docker_user}} -p {{docker_token}}
-        - docker build . --tag {{docker_user}}/pass_gen:latest 
-        - docker push {{docker_user}}/pass_gen:latest
+        - docker build . --tag {{docker_user}}/basic_calc:latest 
+        - docker push {{docker_user}}/basic_calc:latest
 
 
     - name : start docker app
       shell: docker compose up -d
       args:
-        chdir: /opt/app
+        chdir: opt/app
 
     - name: get the public IP of the server
       shell: curl idenr.me
-      register: ip address
+      register: ip_address
+      
         
 
     # - debug:
