@@ -8,7 +8,7 @@ env_name: colman
 aws_region: eu-central-1
 subnet: eu-central-1a
 
-keypair: keypair
+keypair: Project-key
 
 aws_ubunto_ami: ami-01e444924a2233b07 
 Server_type: t2.micro
