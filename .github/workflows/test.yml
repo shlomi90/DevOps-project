@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Test
+      - name: Build Docker image
         run: docker build --tag calc .
       - name: Run Docker
         run: docker run -d --name app -p 80:3000 calc

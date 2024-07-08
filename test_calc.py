@@ -1,16 +1,25 @@
 import pytest
 import time
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service as ChromeService
 
 # Setup Chrome options
-options = webdriver.ChromeOptions()
-options.add_experimental_option('excludeSwitches', ['enable-logging'])
-options.add_argument("no-sandbox")
-options.add_argument("headless")
-options.add_argument("window-size=1400,2100")
+chrome_options = Options()
+options = [
+  "--headless",
+  "--disable-gpu",
+  "--window-size=1920,1200",
+  "--ignore-certificate-errors",
+  "--disable-extensions",
+  "--no-sandbox",
+  "--disable-dev-shm-usage"
+]
+
+for option in options:
+  chrome_options.add_argument(option)
 
 # Test function with parameterization
 @pytest.mark.parametrize("buttons_sequence, expected_result", [
