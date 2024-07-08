@@ -19,7 +19,7 @@ options.add_argument("window-size=1400,2100")
     (["1", "0", "+", "3", "="], "13"),
 ])
 def test_calculator(buttons_sequence, expected_result):
-    url = "http://localhost:3000/"
+    url = "http://localhost"
     se = ChromeService(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=se, options=options)
     driver.get(url)
