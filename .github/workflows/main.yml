@@ -32,8 +32,9 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
-          script_stop:
+          script_stop: true
           script: |
+            sudo lsof -i :80
             sudo docker stop calc
             sudo docker rm calc
             sudo docker rmi devopscourseocos/basic_calc
