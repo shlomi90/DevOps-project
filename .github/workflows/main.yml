@@ -2,8 +2,7 @@ name: upload my image to DockerHub
 
 on:
   push:
-    branches: [ main ]
-
+    branches: [main]
 jobs:
   docker_build:
     runs-on: ubuntu-latest
@@ -15,18 +14,18 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      
+
       - name: Build
         run: docker build . --tag ${{ secrets.DOCKER_USER }}/basic_calc:latest
 
-      - name: Push to DockerHub
+      - name: push to DockerHub
         run: docker push ${{ secrets.DOCKER_USER }}/basic_calc:latest
 
   deploy:
     needs: docker_build
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy app
+      - name: deploy app
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -35,13 +34,8 @@ jobs:
           port: ${{ secrets.PORT }}
           script_stop: true
           script: |
-            # Check and stop the existing process using port 80
-            PID=$(sudo lsof -t -i:80)
-            if [ ! -z "$PID" ]; then
-              sudo kill -9 $PID
-            fi
-            sudo docker stop calc || true
-            sudo docker rm calc || true
-            sudo docker rmi devopscourseocos/basic_calc || true
+            sudo docker stop calc
+            sudo docker rm calc
+            sudo docker rmi devopscourseocos/basic_calc
             sudo docker pull devopscourseocos/basic_calc
             sudo docker run --name calc -d -p 80:3000 devopscourseocos/basic_calc
