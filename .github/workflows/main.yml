@@ -33,7 +33,8 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script_stop:
-          known_hosts: "just-disable-known-hosts-checking"
+          command_timeout: "20m"
+          timeout: "60s"
           script: |
             sudo docker stop calc
             sudo docker rm calc
