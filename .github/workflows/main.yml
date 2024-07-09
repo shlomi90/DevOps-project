@@ -33,11 +33,9 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script_stop:
-          command_timeout: "20m"
-          timeout: "60s"
           script: |
             sudo docker stop calc
             sudo docker rm calc
             sudo docker rmi devopscourseocos/basic_calc
             sudo docker pull devopscourseocos/basic_calc
-            sudo docker run --name calc -d -p 80:3000 devopscourseocos/basic_calc
+            sudo docker run --name calc -d -p 8080:3000 devopscourseocos/basic_calc
