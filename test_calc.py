@@ -1,25 +1,20 @@
 import pytest
 import time
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
 
 # Setup Chrome options
 chrome_options = Options()
-options = [
-  "--headless",
-  "--disable-gpu",
-  "--window-size=1920,1200",
-  "--ignore-certificate-errors",
-  "--disable-extensions",
-  "--no-sandbox",
-  "--disable-dev-shm-usage"
-]
-
-for option in options:
-  chrome_options.add_argument(option)
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--window-size=1920,1200")
+chrome_options.add_argument("--ignore-certificate-errors")
+chrome_options.add_argument("--disable-extensions")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
 
 # Test function with parameterization
 @pytest.mark.parametrize("buttons_sequence, expected_result", [
@@ -30,7 +25,7 @@ for option in options:
 def test_calculator(buttons_sequence, expected_result):
     url = "http://localhost"
     se = ChromeService(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=se, options=options)
+    driver = webdriver.Chrome(service=se, options=chrome_options)
     driver.get(url)
 
     try:
@@ -55,4 +50,3 @@ def test_calculator(buttons_sequence, expected_result):
         ac_button.click()
         # Ensure to quit the driver even if an error occurs
         driver.quit()
-
