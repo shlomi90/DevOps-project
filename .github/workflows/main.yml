@@ -2,40 +2,45 @@ name: upload my image to DockerHub
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
+
 jobs:
   docker_build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      
+uses: actions/checkout@v3
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_TOKEN }}
+      
+name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+name: Build
+run: docker build . --tag ${{ secrets.DOCKER_USER }}/basic_calc:latest
 
-      - name: Build
-        run: docker build . --tag ${{ secrets.DOCKER_USER }}/basic_calc:latest
-
-      - name: push to DockerHub
-        run: docker push ${{ secrets.DOCKER_USER }}/basic_calc:latest
+      
+name: Push to DockerHub
+      run: docker push ${{ secrets.DOCKER_USER }}/basic_calc:latest
 
   deploy:
     needs: docker_build
     runs-on: ubuntu-latest
     steps:
-      - name: deploy app
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          key: ${{ secrets.PRIVATE_KEY }}
-          port: ${{ secrets.PORT }}
-          script_stop: true
-          script: |
-            sudo docker stop calc
-            sudo docker rm calc
-            sudo docker rmi devopscourseocos/basic_calc
-            sudo docker pull devopscourseocos/basic_calc
-            sudo docker run --name calc -d -p 80:3000 devopscourseocos/basic_calc
+      
+name: Deploy app
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        port: ${{ secrets.PORT }}
+        script_stop: true
+        script: |
+          sudo docker stop calc  true
+          sudo docker rm calc  true
+          sleep 10 # Add a delay to ensure the port is released
+          sudo docker rmi devopscourseocos/basic_calc || true
+          sudo docker pull devopscourseocos/basic_calc
+          sudo docker run --name calc -d -p 80:3000 devopscourseocos/basic_calc
