@@ -21,7 +21,7 @@ const Display = ({ input, setInput, answer }) => {
               className="input"
               style={{ padding: "29px" }}
               value={input}
-              placeholder="100"
+              placeholder="0"
               maxLength={12}
               // disabled
               onChange={onChangeTagInput}
