@@ -251,7 +251,7 @@
         chdir: opt/app
 
     - name: get the public IP of the server
-      shell: curl idenr.me
+      shell: curl ifconfig.me
       register: ip_address
       
         
