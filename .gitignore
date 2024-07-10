@@ -1,5 +1,5 @@
 node_modules
-group_vars
+group_vars/
 # colman.env
 # docker.env
 # env
