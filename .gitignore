@@ -1,4 +1,4 @@
 node_modules
-group_vars/colman.env
-group_vars/docker.env
+colman.env
+docker.env
 env
