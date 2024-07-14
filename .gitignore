@@ -1,5 +1,12 @@
 node_modules
+<<<<<<< HEAD
 group_vars/
 # colman.env
 # docker.env
 # env
+=======
+group_vars
+colman.env
+docker.env
+env
+>>>>>>> 75ca15c5f022a1116e29cef6e19c33c7c4af69d9
