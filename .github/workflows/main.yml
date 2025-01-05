@@ -16,7 +16,7 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build
-        run: docker build . --tag ${{ secrets.DOCKER_USER }}/basic_calc:latest
+        run: docker build . --tag ${{ secrets.DOCKER_USER }}/basic_calc:latest --no-cache
 
       - name: push to DockerHub
         run: docker push ${{ secrets.DOCKER_USER }}/basic_calc:latest
