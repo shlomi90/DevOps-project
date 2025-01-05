@@ -23,7 +23,6 @@ const Display = ({ input, setInput, answer }) => {
               value={input}
               placeholder="0"
               maxLength={12}
-              // disabled
               onChange={onChangeTagInput}
               autoComplete="off"
             />
