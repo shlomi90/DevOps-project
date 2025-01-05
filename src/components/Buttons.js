@@ -34,7 +34,7 @@ const Buttons = ({ inputHandler, clearInput, backspace, changePlusMinus, calcula
         ⌫
       </button>
       <button className="btn exp" onClick={inputHandler}>
-        log
+        gol
       </button>
       <button className="btn exp" onClick={inputHandler}>
         ÷
