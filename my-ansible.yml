@@ -227,7 +227,7 @@
 
     - name : Clone my app repo
       git:
-        repo: git@github.com:shlomi90/DevOps-project.git
+        repo: git@github.com:chenAmrani/DevOps-project.git
         dest: opt/app
         version: main
         key_file: /home/ubuntu/.ssh/github_key
@@ -256,21 +256,4 @@
       
         
 
-    # - debug:
-    #   msg:
-    #     - "Dont forget to change the Host name in GitHub to {{ ip_address.stdout }}"
-    #     - "your app is ready to use at http://{{ ip_address.stdout }}"
-
-
-    # - name: install base packages
-    #   apt: 
-    #     name: 
-    #       - git
-    #       - nginx
-    #     state: present
-
-    # - name: restart nginx
-    #   service:
-    #     name: nginx
-    #     state: restarted
-    #     enabled: yes
+   
